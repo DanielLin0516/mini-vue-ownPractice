@@ -23,6 +23,7 @@ function cleanupEffect(effect: any) {
     dep.delete(effect);
   });
 }
+// test
 const targetMap = new Map();
 export function track(target, key) {
   let depsMap = targetMap.get(target);
