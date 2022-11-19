@@ -8,4 +8,12 @@ describe("reactive", () => {
     expect(isReactive(observed)).toBe(true);
     expect(isReactive(original)).toBe(false);
   });
+
+  it("object path", () => {
+    const original = { nest: { foo: 1 }, array: [{ bar: 2 }] };
+    const observed = reactive(original);
+    expect(isReactive(observed.nest)).toBe(true);
+    expect(isReactive(observed.array)).toBe(true);
+    expect(isReactive(observed.array[0])).toBe(true);
+  })
 });
