@@ -17,7 +17,7 @@ class RefImpl {
     return this._value;
   }
   set value(newValue) {
-    if(hasChanged(newValue, this._rawValue)) {
+    if (hasChanged(newValue, this._rawValue)) {
       this._rawValue = newValue;
       this._value = convert(newValue);
       triggerEffects(this.dep);
@@ -30,7 +30,7 @@ function convert(value) {
 }
 
 function trackRefValue(ref) {
-  if(isTracking()) {
+  if (isTracking()) {
     trackEffects(ref.dep);
   }
 }
@@ -45,4 +45,19 @@ export function isRef(ref) {
 
 export function unRef(ref) {
   return isRef(ref) ? ref.value : ref;
+}
+
+export function proxyRefs(objectRefs) {
+  return new Proxy(objectRefs, {
+    get(target, key) {
+      return unRef(Reflect.get(target, key));
+    },
+    set(target, key, value) {
+      if (isRef(target[key]) && !isRef(value)) {
+        return (target[key].value = value);
+      } else {
+        return Reflect.set(target, key, value);
+      }
+    }
+  })
 }
